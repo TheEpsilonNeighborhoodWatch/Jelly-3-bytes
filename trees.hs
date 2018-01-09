@@ -13,13 +13,10 @@ instance Functor (Functoid x) where
 instance Applicative (Functoid a) where
  pure x = Functoid (\[] -> x) 0
  
-wrap :: ([a] -> b) -> ([a] -> Functoid a b)
-wrap impl argG = Functoid (\[] -> impl $ argG ) 0
-
 stitch :: [Functoid a a] -> [Functoid a a] -> [Functoid a a]
 stitch [] [] = []
 stitch (x@(Functoid _ 0):xs) ys = x : stitch xs ys
-stitch ((Functoid impl ar):xs) ys = wrap impl (map (($[]).implementation) $ take ar ys) : stitch xs (drop ar ys)
+stitch ((Functoid impl ar):xs) ys = pure (impl $ map (($[]).implementation) $ take ar ys) : stitch xs (drop ar ys)
 
 evaluate :: [[Functoid a a]] -> a
 evaluate (x:y:rest) = evaluate $ stitch y x : rest
