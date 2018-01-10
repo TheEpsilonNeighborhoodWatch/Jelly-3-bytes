@@ -12,7 +12,13 @@ instance Functor (Functoid x) where
 
 instance Applicative (Functoid a) where
  pure x = Functoid (\[] -> x) 0
- 
+
+infixr 9 <.>
+(<.>) :: Functoid a b -> Functoid a a -> Functoid a b
+(Functoid impl1 ar1) <.> (Functoid impl2 ar2) = Functoid newImpl (ar1 + ar2 - 1)
+ where newImpl l
+        | length l == ar1 + ar2 - 1 = impl1 $ impl2 (drop (ar1 - 1) l) : take (ar1 - 1) l
+
 stitch :: [Functoid a a] -> [Functoid a a] -> [Functoid a a]
 stitch [] [] = []
 stitch (x@(Functoid _ 0):xs) ys = x : stitch xs ys
