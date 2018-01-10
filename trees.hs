@@ -25,6 +25,7 @@ buildTree :: [[Functoid a]] -> ProgTree a
 buildTree = head . (foldr stitch []) 
 
 stratify :: Int -> [Functoid a] -> [[Functoid a]]
+stratify x [] = []
 stratify x fs = layer : stratify (sum $ map arity layer) (drop x fs) 
  where layer = take x fs
 
