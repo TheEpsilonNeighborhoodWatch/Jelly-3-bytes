@@ -1,4 +1,4 @@
-module Functoid (standardCompose, Functoid) where
+module Functoid (standardCompose, Functoid(..)) where
 
 standardCompose :: Functoid a -> Functoid a -> Functoid a
 standardCompose (Functoid comp1 app1 ar1) (Functoid _ app2 ar2) = Functoid standardCompose newApp (ar1 + ar2 -1)

@@ -1,4 +1,5 @@
 import Control.Monad
+import Functoid
 
 data ProgTree a = ProgTree (Functoid a) [ProgTree a]
 
