@@ -4,6 +4,7 @@
 
 import Diagrams.Prelude
 import Diagrams.Backend.SVG.CmdLine
+import StringParse
 
 regPoly' :: (V t ~ V2, TrailLike t) => Int -> N t -> t
 regPoly' faces radius = polygon $ PolygonOpts (PolyRegular faces radius) NoOrient (P (V2 0 0))
@@ -26,9 +27,11 @@ connections :: Int -> Int -> [(a,Int)] -> [(Int,Int)]
 connections _ _ [] = []
 connections offset readhead ((_,ar):xs) = [(offset,readhead+x)|x<-[1..ar]] ++ connections (offset + 1) (readhead + ar) xs 
 
-structure = [("ø",2),("å",3),("∑",2),("∫",1),("≤",2),("¬",1),("@",0),("∂",2),("&",0),("1",0),("∆",0),("@",0),("¥",0),("æ",0)]
+d :: FilePath -> IO (Diagram B)
+d file = do
+ f <- readFile file;
+ {- We use init here because `\n` causes an error, this is a temporary fix -}
+ let structure = visualparse $ init f;
+ return $ foldr (uncurry connectOutside) (form $ stratify 1 $ zipWith (\x (a,b)->((a,x),b)) [0..] structure) $ connections 0 0 structure;
 
-example = foldr (uncurry connectOutside) (form $ stratify 1 $ zipWith (\x (a,b)->((a,x),b)) [0..] structure) $ connections 0 0 structure 
---example =(form $ stratify 1 $ zipWith (\x (a,b)->((a,x),b)) [0..] structure)
-
-main = mainWith example
+main = mainWith d

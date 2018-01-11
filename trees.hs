@@ -1,3 +1,6 @@
+module Trees (parse) where
+-- Better Module name?
+
 import Control.Monad
 import Functoid
 
@@ -19,3 +22,5 @@ stratify x [] = []
 stratify x fs = layer : stratify (sum $ map arity layer) (drop x fs) 
  where layer = take x fs
 
+parse :: [Functoid a] -> Functoid a
+parse = flatten . buildTree . stratify 1
