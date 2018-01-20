@@ -28,12 +28,6 @@ semiparse :: String -> [Functoid Object]
 semiparse [] = []
 semiparse (a:x) = tokenparse (a:[]) : semiparse x
 
-
--- Parser for the interpreter --
-semiparse :: String -> [Functoid Object]
-semiparse [] = []
-semiparse (a:x) = tokenparse (a:[]) : semiparse x
-
 -- Parser for the visualizer --
 visualparse :: String -> [(String,Int)]
 visualparse [] = []
